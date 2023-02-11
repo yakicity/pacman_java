@@ -8,6 +8,7 @@ public class Pacman extends JFrame {
     public final Board board;
 
     public Pacman() {
+        //パックマンというキャラクターではなく、パックマンゲームを始めるクラス
         this.board = new Board();
         add(board);
         setTitle("Pacman");

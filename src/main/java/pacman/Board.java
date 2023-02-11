@@ -41,8 +41,12 @@ public class Board extends JPanel {
     public static final Dimension SCREEN_SIZE = new Dimension(BOARD_SIZE.width, BOARD_SIZE.height + 55);
 
     private static final int MAX_GHOSTS = 12;
+    /**
+     * Pacman's speed.
+    */
     private static final int PACMAN_SPEED = 6;
     private static final int[] VALID_SPEEDS = {1, 2, 3, 4, 6, 8};
+    // pacman
     private static final int[] ANIMATION_STATES = {0, 0, 1, 1, 2, 2, 3, 3, 2, 2, 1, 1};
 
     private static final Font SMALL_FONT = new Font("Helvetica", Font.BOLD, 14);
@@ -50,7 +54,13 @@ public class Board extends JPanel {
     private static final Color WALL_COLOR = new Color(5, 100, 5);
     private static final Color SCORE_COLOR = new Color(96, 128, 255);
 
+    /**
+     * ghost.
+     */
     private static final Image GHOST_IMAGE = load("ghost.png");
+    /**
+     * Pacman's image.
+    */
     private static final Image PACMAN_IMAGE_NEUTRAL = load("pacman.png");
     private static final Image[] PACMAN_IMAGE_L = {PACMAN_IMAGE_NEUTRAL, load("left1.png"), load("left2.png"), load("left3.png")};
     private static final Image[] PACMAN_IMAGE_U = {PACMAN_IMAGE_NEUTRAL, load("up1.png"), load("up2.png"), load("up3.png")};
@@ -79,8 +89,15 @@ public class Board extends JPanel {
     private boolean dying = false;
     private final int[] map = new int[MAP_SIZE.width * MAP_SIZE.height];
 
+    // pacman
     private int animationIndex = 0;
+    /**
+     * Pacman's left.
+     */
     private int pacmansLeft;
+    /**
+     * score.
+     */    
     private int score;
 
     /**
@@ -127,6 +144,9 @@ public class Board extends JPanel {
 
     private final Random random = new Random();
 
+    /**
+     * character.
+    */
     private static Image load(String filename) {
         URL url = Board.class.getClassLoader().getResource("images/" + filename);
         assert url != null;
@@ -175,8 +195,8 @@ public class Board extends JPanel {
             int x = i % MAP_SIZE.width;
             int y = i / MAP_SIZE.width;
             int c = 0;
-            if (x == 0 || (level[i] == 1 && level[i - 1] == 0)) {
-                c |= 1; // L
+            if (x == 0 || (level[i] == 1 && level[i - 1] == 0)) {//一番左はし、もしくは今いる位置の左隣は壁なら
+                c |= 1; // Lにはいけないという意味で、右から一番目のビットを1立てる
             }
             if (i < MAP_SIZE.width || (level[i] == 1 && level[i - MAP_SIZE.width] == 0)) {
                 c |= 2; // U
@@ -185,7 +205,7 @@ public class Board extends JPanel {
                 c |= 4; // R
             }
             if (y == MAP_SIZE.height - 1 || (level[i] == 1 && level[i + MAP_SIZE.width] == 0)) {
-                c |= 8; // U
+                c |= 8; // D
             }
             if (level[i] == 1) {
                 c |= 16; // dot
@@ -219,7 +239,7 @@ public class Board extends JPanel {
 
     private void updateGame() {
         if (inGame) {
-            if (dying) {
+            if (dying) {//一回死ぬ
                 death();
             } else {
                 movePacman();
@@ -257,7 +277,7 @@ public class Board extends JPanel {
      */
     private boolean checkComplete() {
         for (int s : map) {
-            if ((s & 48) != 0) {
+            if ((s & 48) != 0) {//おそらく右から5番目のビット、つまり32の値はスーパー食料な気がする
                 return false;
             }
         }
@@ -287,7 +307,7 @@ public class Board extends JPanel {
     }
 
     /**
-     * Moves Pacman.
+     * Moves Pacman.　->packman
      */
     private void movePacman() {
         // Pacman can always go in the exact opposite direction
@@ -297,14 +317,14 @@ public class Board extends JPanel {
         if (onBlock(pPacman)) {
             int loc = pointToLocation(pPacman);
             int l = map[loc];
-            if ((l & 16) != 0) {
+            if ((l & 16) != 0) {//左から5番目のビットが少なくとも1が立ってたら、つまりまだ食料を食べていなかったら
                 // eat dot
-                map[loc] = l & 15;
+                map[loc] = l & 15;//5桁目だけを0に変える
                 score++;
             }
             // turn
             if (dRequest != Direction.O) {
-                if (!((dRequest == Direction.L && (l & 1) != 0)
+                if (!((dRequest == Direction.L && (l & 1) != 0)//（左に行きたい、かついけない）ではない、つまりどこかに行ける時
                         || (dRequest == Direction.U && (l & 2) != 0)
                         || (dRequest == Direction.R && (l & 4) != 0)
                         || (dRequest == Direction.D && (l & 8) != 0))) {
@@ -316,7 +336,7 @@ public class Board extends JPanel {
                     || (dPacman == Direction.U && (l & 2) != 0)
                     || (dPacman == Direction.R && (l & 4) != 0)
                     || (dPacman == Direction.D && (l & 8) != 0)) {
-                dPacman = Direction.O;
+                dPacman = Direction.O;//移動できません
             }
         }
         pPacman.x += dPacman.dx * PACMAN_SPEED;
@@ -372,7 +392,7 @@ public class Board extends JPanel {
     }
 
     /**
-     * Updates Pacman's animation state.
+     * Updates Pacman's animation state.->packman
      */
     private void updateAnimationState() {
         animationIndex = (animationIndex + 1) % ANIMATION_STATES.length;
@@ -444,7 +464,7 @@ public class Board extends JPanel {
     }
 
     /**
-     * Draws Pacman.
+     * Draws Pacman.-> packman
      */
     private void drawPacman(Graphics2D g) {
         int state = ANIMATION_STATES[animationIndex];
