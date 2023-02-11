@@ -18,7 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class Board extends JPanel {
-    private static final Logger log = LoggerFactory.getLogger(Board.class);
+    // private static final Logger log = LoggerFactory.getLogger(Board.class);
 
     /**
      * Pixels of one block.
@@ -42,7 +42,7 @@ public class Board extends JPanel {
      */
     public static final Dimension SCREEN_SIZE = new Dimension(BOARD_SIZE.width, BOARD_SIZE.height + 55);
 
-    private static final int MAX_GHOSTS = 12;
+    public static final int MAX_GHOSTS = 12;
     // /**
     //  * Pacman's speed.
     // */
@@ -50,7 +50,9 @@ public class Board extends JPanel {
     // /**
     //  * Ghost's speed.
     // */    
-    private static final int[] VALID_SPEEDS = {1, 2, 3, 4, 6, 8};
+    // private static final int[] VALID_SPEEDS = {1, 2, 3, 4, 6, 8};
+    public static final int[] VALID_SPEEDS = {1, 2, 3, 4, 6, 8};
+
     // pacman
     private static final int[] ANIMATION_STATES = {0, 0, 1, 1, 2, 2, 3, 3, 2, 2, 1, 1};
 
@@ -128,31 +130,34 @@ public class Board extends JPanel {
     /**
      * Number of ghosts.
      */
-    private int numGhosts = 6;
+    // private int numGhosts = 6;
+    public static int numGhosts = 6;
 
     /**
      * Position of ghosts.
      */
-    private final Point[] pGhost = new Point[MAX_GHOSTS];
+    // private final Point[] pGhost = new Point[MAX_GHOSTS];
+    
 
     /**
      * Direction of ghosts.
      */
-    private final Direction[] dGhost = new Direction[MAX_GHOSTS];
+    // private final Direction[] dGhost = new Direction[MAX_GHOSTS];
 
     /**
      * Speed of ghosts.
      */
-    private final int[] ghostSpeed = new int[MAX_GHOSTS];
+    // private final int[] ghostSpeed = new int[MAX_GHOSTS];
 
     /**
      * Current speed rank (indicating possible speeds of ghosts to be assigned).
      */
-    private int ghostSpeedRank = 3;
+    // private static int ghostSpeedRank = 3;
+    public static int ghostSpeedRank = 3;
     private final Recorder recorder = new Recorder();
     private final Timer timer = new Timer(40, recorder.getTimerRecorder(new TimerActionListener()));
 
-    private final Random random = new Random();
+    public static final Random random = new Random();
 
     /**
      * character.
@@ -231,13 +236,15 @@ public class Board extends JPanel {
         // dPacman = dRequest = Direction.O;
         // dPacmanView = Direction.L;
         Player.continueLevelPacman();
+        Ghost.continueLevelGhost();
         dying = false;
-        for (int i = 0; i < numGhosts; i++) {
-            pGhost[i] = new Point(4 * BLOCK_SIZE, 4 * BLOCK_SIZE);
-            dGhost[i] = i % 2 == 0 ? Direction.R : Direction.L;
-            ghostSpeed[i] = VALID_SPEEDS[random.nextInt(ghostSpeedRank)];
-            log.debug("Ghost {}: speed {}", i, ghostSpeed[i]);
-        }
+        Ghost.continueLevelGhost();
+        // for (int i = 0; i < numGhosts; i++) {
+        //     pGhost[i] = new Point(4 * BLOCK_SIZE, 4 * BLOCK_SIZE);
+        //     dGhost[i] = i % 2 == 0 ? Direction.R : Direction.L;
+        //     ghostSpeed[i] = VALID_SPEEDS[random.nextInt(ghostSpeedRank)];
+        //     log.debug("Ghost {}: speed {}", i, ghostSpeed[i]);
+        // }
     }
 
     // ------------------------------------------
@@ -254,7 +261,7 @@ public class Board extends JPanel {
                 death();
             } else {
                 Player.movePacman();
-                moveGhosts();
+                Ghost.moveGhosts();
                 if (checkCollision()) {
                     dying = true;
                 }
@@ -357,45 +364,45 @@ public class Board extends JPanel {
     /**
      * Moves ghosts.
      */
-    private void moveGhosts() {
-        for (int i = 0; i < numGhosts; i++) {
-            if (onBlock(pGhost[i])) {
-                int loc = pointToLocation(pGhost[i]);
-                List<Direction> dirs = new ArrayList<>();
-                if ((map[loc] & 1) == 0 && dGhost[i] != Direction.R) {
-                    dirs.add(Direction.L);
-                }
-                if ((map[loc] & 2) == 0 && dGhost[i] != Direction.D) {
-                    dirs.add(Direction.U);
-                }
-                if ((map[loc] & 4) == 0 && dGhost[i] != Direction.L) {
-                    dirs.add(Direction.R);
-                }
-                if ((map[loc] & 8) == 0 && dGhost[i] != Direction.U) {
-                    dirs.add(Direction.D);
-                }
-                if (dirs.isEmpty()) {
-                    if ((map[loc] & 15) == 15) {
-                        dGhost[i] = Direction.O;
-                    } else {
-                        dGhost[i] = dGhost[i].flip();
-                    }
-                } else {
-                    int n = random.nextInt(dirs.size());
-                    dGhost[i] = dirs.get(n);
-                }
-            }
-            pGhost[i].x += dGhost[i].dx * ghostSpeed[i];
-            pGhost[i].y += dGhost[i].dy * ghostSpeed[i];
-        }
-    }
+    // private void moveGhosts() {
+    //     for (int i = 0; i < numGhosts; i++) {
+    //         if (onBlock(pGhost[i])) {
+    //             int loc = pointToLocation(pGhost[i]);
+    //             List<Direction> dirs = new ArrayList<>();
+    //             if ((map[loc] & 1) == 0 && dGhost[i] != Direction.R) {
+    //                 dirs.add(Direction.L);
+    //             }
+    //             if ((map[loc] & 2) == 0 && dGhost[i] != Direction.D) {
+    //                 dirs.add(Direction.U);
+    //             }
+    //             if ((map[loc] & 4) == 0 && dGhost[i] != Direction.L) {
+    //                 dirs.add(Direction.R);
+    //             }
+    //             if ((map[loc] & 8) == 0 && dGhost[i] != Direction.U) {
+    //                 dirs.add(Direction.D);
+    //             }
+    //             if (dirs.isEmpty()) {
+    //                 if ((map[loc] & 15) == 15) {
+    //                     dGhost[i] = Direction.O;
+    //                 } else {
+    //                     dGhost[i] = dGhost[i].flip();
+    //                 }
+    //             } else {
+    //                 int n = random.nextInt(dirs.size());
+    //                 dGhost[i] = dirs.get(n);
+    //             }
+    //         }
+    //         pGhost[i].x += dGhost[i].dx * ghostSpeed[i];
+    //         pGhost[i].y += dGhost[i].dy * ghostSpeed[i];
+    //     }
+    // }
 
     /**
      * Judges whether Pacman touched any ghost.
      */
     private boolean checkCollision() {
         for (int i = 0; i < numGhosts; i++) {
-            if (isCollision(Player.pPacman, pGhost[i]) && inGame) {
+            if (isCollision(Player.pPacman, Ghost.pGhost[i]) && inGame) {
                 return true;
             }
         }
@@ -502,7 +509,7 @@ public class Board extends JPanel {
      */
     private void drawGhosts(Graphics2D g) {
         for (int i = 0; i < numGhosts; i++) {
-            g.drawImage(GHOST_IMAGE, pGhost[i].x + 1, pGhost[i].y + 1, this);
+            g.drawImage(GHOST_IMAGE, Ghost.pGhost[i].x + 1, Ghost.pGhost[i].y + 1, this);
         }
     }
 
@@ -551,13 +558,13 @@ public class Board extends JPanel {
 
     // --------------------------------
 
-    private boolean onBlock(Point p) {
-        return p.x % BLOCK_SIZE == 0 && p.y % BLOCK_SIZE == 0;
-    }
+    // private boolean onBlock(Point p) {
+    //     return p.x % BLOCK_SIZE == 0 && p.y % BLOCK_SIZE == 0;
+    // }
 
-    private int pointToLocation(Point p) {
-        return (p.y / BLOCK_SIZE) * MAP_SIZE.width + (p.x / BLOCK_SIZE);
-    }
+    // private int pointToLocation(Point p) {
+    //     return (p.y / BLOCK_SIZE) * MAP_SIZE.width + (p.x / BLOCK_SIZE);
+    // }
 
     private boolean isCollision(Point p1, Point p2) {
         return Math.abs(p1.x - p2.x) < 12 && Math.abs(p1.y - p2.y) < 12;
