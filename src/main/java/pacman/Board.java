@@ -190,7 +190,7 @@ public class Board extends JPanel {
         initLevel(LEVEL);
     }
 
-    private void initLevel(int[] level) {
+    private void initLevel(int[] level) {//レベルからMAPをつくる
         for (int i = 0; i < level.length; i++) {
             int x = i % MAP_SIZE.width;
             int y = i / MAP_SIZE.width;
@@ -248,7 +248,7 @@ public class Board extends JPanel {
                     dying = true;
                 }
                 if (checkComplete()) {
-                    increaseLevel();
+                    increaseLevel();//レベル変更処理はここで行う気がする、別のLEVEL配列にするみたいな
                 }
             }
         }
