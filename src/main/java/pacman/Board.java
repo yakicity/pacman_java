@@ -23,12 +23,14 @@ public class Board extends JPanel {
     /**
      * Pixels of one block.
      */
-    private static final int BLOCK_SIZE = 24;
+    // private static final int BLOCK_SIZE = 24;
+    public static final int BLOCK_SIZE = 24;
 
     /**
      * Logical map size: number of blocks.
      */
-    private static final Dimension MAP_SIZE = new Dimension(15, 15);
+    // private static final Dimension MAP_SIZE = new Dimension(15, 15);
+    public static final Dimension MAP_SIZE = new Dimension(15, 15);
 
     /**
      * Board (physical map on screen) size.
@@ -41,10 +43,13 @@ public class Board extends JPanel {
     public static final Dimension SCREEN_SIZE = new Dimension(BOARD_SIZE.width, BOARD_SIZE.height + 55);
 
     private static final int MAX_GHOSTS = 12;
-    /**
-     * Pacman's speed.
-    */
-    private static final int PACMAN_SPEED = 6;
+    // /**
+    //  * Pacman's speed.
+    // */
+    // private static final int PACMAN_SPEED = 6;
+    // /**
+    //  * Ghost's speed.
+    // */    
     private static final int[] VALID_SPEEDS = {1, 2, 3, 4, 6, 8};
     // pacman
     private static final int[] ANIMATION_STATES = {0, 0, 1, 1, 2, 2, 3, 3, 2, 2, 1, 1};
@@ -87,7 +92,9 @@ public class Board extends JPanel {
 
     private boolean inGame = false;
     private boolean dying = false;
-    private final int[] map = new int[MAP_SIZE.width * MAP_SIZE.height];
+    // private final int[] map = new int[MAP_SIZE.width * MAP_SIZE.height];
+    public static final int[] map = new int[MAP_SIZE.width * MAP_SIZE.height];
+
 
     // pacman
     private int animationIndex = 0;
@@ -98,22 +105,25 @@ public class Board extends JPanel {
     /**
      * score.
      */    
-    private int score;
+    // private int score;
+    public static int score;
 
-    /**
-     * Pacman's position.
-     */
-    private Point pPacman;
+    // /**
+    //  * Pacman's position.
+    //  */
+    // private Point pPacman;
 
-    /**
-     * Pacman's (logical and view's) directions.
-     */
-    private Direction dPacman, dPacmanView;
+    // /**
+    //  * Pacman's (logical and view's) directions.
+    //  */
+    // private Direction dPacman, dPacmanView;
+    public static Direction dPacmanView;
 
-    /**
-     * Direction from the keyboard event.
-     */
-    private Direction dRequest;
+    // /**
+    //  * Direction from the keyboard event.
+    //  */
+    // private Direction dRequest;
+    public static Direction dRequest;
 
     /**
      * Number of ghosts.
@@ -217,9 +227,10 @@ public class Board extends JPanel {
     }
 
     private void continueLevel() {
-        pPacman = new Point(7 * BLOCK_SIZE, 11 * BLOCK_SIZE);
-        dPacman = dRequest = Direction.O;
-        dPacmanView = Direction.L;
+        // pPacman = new Point(7 * BLOCK_SIZE, 11 * BLOCK_SIZE);
+        // dPacman = dRequest = Direction.O;
+        // dPacmanView = Direction.L;
+        Player.continueLevelPacman();
         dying = false;
         for (int i = 0; i < numGhosts; i++) {
             pGhost[i] = new Point(4 * BLOCK_SIZE, 4 * BLOCK_SIZE);
@@ -242,7 +253,7 @@ public class Board extends JPanel {
             if (dying) {//一回死ぬ
                 death();
             } else {
-                movePacman();
+                Player.movePacman();
                 moveGhosts();
                 if (checkCollision()) {
                     dying = true;
@@ -306,42 +317,42 @@ public class Board extends JPanel {
         continueLevel();
     }
 
-    /**
-     * Moves Pacman.　->packman
-     */
-    private void movePacman() {
-        // Pacman can always go in the exact opposite direction
-        if (dRequest.flip() == dPacman) {
-            dPacmanView = dPacman = dRequest;
-        }
-        if (onBlock(pPacman)) {
-            int loc = pointToLocation(pPacman);
-            int l = map[loc];
-            if ((l & 16) != 0) {//左から5番目のビットが少なくとも1が立ってたら、つまりまだ食料を食べていなかったら
-                // eat dot
-                map[loc] = l & 15;//5桁目だけを0に変える
-                score++;
-            }
-            // turn
-            if (dRequest != Direction.O) {
-                if (!((dRequest == Direction.L && (l & 1) != 0)//（左に行きたい、かついけない）ではない、つまりどこかに行ける時
-                        || (dRequest == Direction.U && (l & 2) != 0)
-                        || (dRequest == Direction.R && (l & 4) != 0)
-                        || (dRequest == Direction.D && (l & 8) != 0))) {
-                    dPacmanView = dPacman = dRequest;
-                }
-            }
-            // Check for standstill
-            if ((dPacman == Direction.L && (l & 1) != 0)
-                    || (dPacman == Direction.U && (l & 2) != 0)
-                    || (dPacman == Direction.R && (l & 4) != 0)
-                    || (dPacman == Direction.D && (l & 8) != 0)) {
-                dPacman = Direction.O;//移動できません
-            }
-        }
-        pPacman.x += dPacman.dx * PACMAN_SPEED;
-        pPacman.y += dPacman.dy * PACMAN_SPEED;
-    }
+    // /**
+    //  * Moves Pacman.　->packman
+    //  */
+    // private void movePacman() {
+    //     // Pacman can always go in the exact opposite direction
+    //     if (dRequest.flip() == dPacman) {
+    //         dPacmanView = dPacman = dRequest;
+    //     }
+    //     if (onBlock(pPacman)) {
+    //         int loc = pointToLocation(pPacman);
+    //         int l = map[loc];
+    //         if ((l & 16) != 0) {//左から5番目のビットが少なくとも1が立ってたら、つまりまだ食料を食べていなかったら
+    //             // eat dot
+    //             map[loc] = l & 15;//5桁目だけを0に変える
+    //             score++;
+    //         }
+    //         // turn
+    //         if (dRequest != Direction.O) {
+    //             if (!((dRequest == Direction.L && (l & 1) != 0)//（左に行きたい、かついけない）ではない、つまりどこかに行ける時
+    //                     || (dRequest == Direction.U && (l & 2) != 0)
+    //                     || (dRequest == Direction.R && (l & 4) != 0)
+    //                     || (dRequest == Direction.D && (l & 8) != 0))) {
+    //                 dPacmanView = dPacman = dRequest;
+    //             }
+    //         }
+    //         // Check for standstill
+    //         if ((dPacman == Direction.L && (l & 1) != 0)
+    //                 || (dPacman == Direction.U && (l & 2) != 0)
+    //                 || (dPacman == Direction.R && (l & 4) != 0)
+    //                 || (dPacman == Direction.D && (l & 8) != 0)) {
+    //             dPacman = Direction.O;//移動できません
+    //         }
+    //     }
+    //     pPacman.x += dPacman.dx * PACMAN_SPEED;
+    //     pPacman.y += dPacman.dy * PACMAN_SPEED;
+    // }
 
     /**
      * Moves ghosts.
@@ -384,7 +395,7 @@ public class Board extends JPanel {
      */
     private boolean checkCollision() {
         for (int i = 0; i < numGhosts; i++) {
-            if (isCollision(pPacman, pGhost[i]) && inGame) {
+            if (isCollision(Player.pPacman, pGhost[i]) && inGame) {
                 return true;
             }
         }
@@ -483,7 +494,7 @@ public class Board extends JPanel {
             img = PACMAN_IMAGE_D[state];
             break;
         }
-        g.drawImage(img, pPacman.x + 1, pPacman.y + 1, this);
+        g.drawImage(img, Player.pPacman.x + 1, Player.pPacman.y + 1, this);
     }
 
     /**
@@ -509,7 +520,15 @@ public class Board extends JPanel {
                 }
                 return;
             }
-
+            // if (key == KeyEvent.VK_ESCAPE && timer.isRunning()) {
+            //     finishGame();
+            // } else if (key == KeyEvent.VK_PAUSE) {
+            //     if (timer.isRunning()) {
+            //         timer.stop();
+            //     } else {
+            //         timer.start();
+            //     }
+            // }
             if (key == KeyEvent.VK_LEFT) {
                 dRequest = Direction.L;
             } else if (key == KeyEvent.VK_RIGHT) {
