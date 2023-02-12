@@ -45,28 +45,11 @@ public class Board extends JPanel {
     private static final Color WALL_COLOR = new Color(5, 100, 5);
     private static final Color SCORE_COLOR = new Color(96, 128, 255);
 
-    private static final int[] LEVEL = {
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1,
-        1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1,
-        1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1,
-        0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1,
-        0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1,
-        0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1,
-        0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1,
-        0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1,
-        0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1,
-        0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
-    };
-
     private boolean inGame = false;
     private boolean dying = false;
     static final int[] map = new int[MAP_SIZE.width * MAP_SIZE.height];
     static int score;
+    static int level = 0;
 
     /**
      * Direction from the keyboard event.
@@ -117,41 +100,39 @@ public class Board extends JPanel {
     private void initGame() {
         player.pacmansLeft = 3;
         score = 0;
-        ghost.numGhosts = 6;
+        ghost.numGhosts = 0;
         ghost.ghostSpeedRank = 3;
-        initLevel(LEVEL);
+        initMap(Arrangement.ARRANGEMENTS[Arrangement.numOfArr]);
+        continueGame();
     }
-
-    private void initLevel(int[] level) {//レベルからMAPをつくる
-        for (int i = 0; i < level.length; i++) {
+    private void initMap(int[] arrangement) {//レベルからMAPをつくる
+        for (int i = 0; i < arrangement.length; i++) {
             int x = i % MAP_SIZE.width;
             int y = i / MAP_SIZE.width;
             int c = 0;
-            if (x == 0 || (level[i] == 1 && level[i - 1] == 0)) {//一番左はし、もしくは今いる位置の左隣は壁なら
+            if (x == 0 || (arrangement[i] == 1 && arrangement[i - 1] == 0)) {//一番左はし、もしくは今いる位置の左隣は壁なら
                 c |= 1; // Lにはいけないという意味で、右から一番目のビットを1立てる
             }
-            if (i < MAP_SIZE.width || (level[i] == 1 && level[i - MAP_SIZE.width] == 0)) {
+            if (i < MAP_SIZE.width || (arrangement[i] == 1 && arrangement[i - MAP_SIZE.width] == 0)) {
                 c |= 2; // U
             }
-            if (x == MAP_SIZE.width - 1 || (level[i] == 1 && level[i + 1] == 0)) {
+            if (x == MAP_SIZE.width - 1 || (arrangement[i] == 1 && arrangement[i + 1] == 0)) {
                 c |= 4; // R
             }
-            if (y == MAP_SIZE.height - 1 || (level[i] == 1 && level[i + MAP_SIZE.width] == 0)) {
+            if (y == MAP_SIZE.height - 1 || (arrangement[i] == 1 && arrangement[i + MAP_SIZE.width] == 0)) {
                 c |= 8; // D
             }
-            if (level[i] == 1) {
+            if (arrangement[i] == 1) {
                 c |= 16; // dot
             }
             map[i] = c;
         }
-
-        continueLevel();
     }
 
-    private void continueLevel() {
-        player.continueLevelPacman();
+    private void continueGame() {
+        player.continueGamePacman();
         dying = false;
-        ghost.continueLevelGhost();
+        ghost.continueGameGhost();
     }
 
     // ------------------------------------------
@@ -174,7 +155,8 @@ public class Board extends JPanel {
                     dying = true;
                 }
                 if (checkComplete()) {
-                    increaseLevel();//レベル変更処理はここで行う気がする、別のLEVEL配列にするみたいな
+                    score += (50*level);
+                    increaseLevel();
                 }
             }
         }
@@ -214,14 +196,16 @@ public class Board extends JPanel {
      * Goes to the next level.
      */
     private void increaseLevel() {
-        score += 50;
         if (ghost.numGhosts < Ghost.MAX_GHOSTS) {
             ghost.numGhosts++;
         }
         if (ghost.ghostSpeedRank < Ghost.VALID_SPEEDS.length) {
             ghost.ghostSpeedRank++;
-        }
-        initLevel(LEVEL);
+        }       
+        Arrangement.changeArrangement();
+        initMap(Arrangement.ARRANGEMENTS[Arrangement.numOfArr]);
+        level +=1;
+        continueGame();
     }
 
     private void death() {
@@ -229,7 +213,7 @@ public class Board extends JPanel {
         if (player.pacmansLeft == 0) {
             finishGame();
         }
-        continueLevel();
+        continueGame();
     }
 
 

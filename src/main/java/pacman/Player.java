@@ -35,7 +35,7 @@ public class Player extends JPanel{
      */
     int pacmansLeft;
 
-    void continueLevelPacman(){
+    void continueGamePacman(){
         pPacman = new Point(7 * Board.BLOCK_SIZE, 11 * Board.BLOCK_SIZE);
         dPacman = Board.dRequest = Direction.O;
         dPacmanView = Direction.L;

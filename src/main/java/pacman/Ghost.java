@@ -26,7 +26,7 @@ public class Ghost extends JPanel{
     
     int ghostSpeedRank = 3;
 
-    void continueLevelGhost(){
+    void continueGameGhost(){
         for (int i = 0; i < numGhosts; i++) {
             pGhost[i] = new Point(4 * Board.BLOCK_SIZE, 4 * Board.BLOCK_SIZE);
             dGhost[i] = i % 2 == 0 ? Direction.R : Direction.L;
