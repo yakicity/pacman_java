@@ -43,7 +43,13 @@ public class Player extends Character{
         if (onBlock(pPacman)) {
             int loc = pointToLocation(pPacman);
             int l = Board.map[loc];
-            if ((l & 16) != 0) {//左から5番目のビットが少なくとも1が立ってたら、つまりまだ食料を食べていなかったら
+            if ((l & 32) != 0) {//右から6番目のビットが少なくとも1が立ってたら、つまりまだ食料を食べていなかったら
+                // eat super dot
+                Board.map[loc] = l & 31;//6桁目だけを0に変える
+                Board.score += 10;
+
+            }
+            if ((l & 16) != 0) {//右から5番目のビットが少なくとも1が立ってたら、つまりまだ食料を食べていなかったら
                 // eat dot
                 Board.map[loc] = l & 15;//5桁目だけを0に変える
                 Board.score++;

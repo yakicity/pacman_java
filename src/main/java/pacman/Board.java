@@ -32,6 +32,7 @@ public class Board extends JPanel {
 
     private static final Font SMALL_FONT = new Font("Helvetica", Font.BOLD, 14);
     private static final Color DOT_COLOR = new Color(192, 192, 0);
+    private static final Color SUPER_DOT_COLOR = new Color(0, 192, 192);
     private static final Color WALL_COLOR = new Color(5, 100, 5);
     private static final Color SCORE_COLOR = new Color(96, 128, 255);
 
@@ -116,6 +117,9 @@ public class Board extends JPanel {
             }
             if (arrangement[i] == 1) {
                 c |= 16; // dot
+            }
+            if (arrangement[i] == 2) {
+                c |= 32; // super dot
             }
             map[i] = c;
         }
@@ -249,6 +253,15 @@ public class Board extends JPanel {
                 int x = (i % MAP_SIZE.width) * BLOCK_SIZE;
                 int y = (i / MAP_SIZE.width) * BLOCK_SIZE;
                 g.fillRect(x + BLOCK_SIZE/2 - 1, y + BLOCK_SIZE/2 - 1, 2, 2);
+            }
+        }
+        // draw super dots
+        g.setColor(SUPER_DOT_COLOR);
+        for (int i = 0; i < map.length; i++) {
+            if ((map[i] & 32) != 0) {
+                int x = (i % MAP_SIZE.width) * BLOCK_SIZE;
+                int y = (i / MAP_SIZE.width) * BLOCK_SIZE;
+                g.fillRect(x + BLOCK_SIZE/2 - 1, y + BLOCK_SIZE/2 - 1, 4, 4);
             }
         }
     }
