@@ -16,23 +16,25 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 public class Ghost {
-    public static final int MAX_GHOSTS = 12;
-    public static final Point[] pGhost = new Point[MAX_GHOSTS];
-    public static final Direction[] dGhost = new Direction[MAX_GHOSTS];
-    public static final int[] ghostSpeed = new int[MAX_GHOSTS];
+    static final int MAX_GHOSTS = 12;
+    static final int[] VALID_SPEEDS = {1, 2, 3, 4, 6, 8};
+    final Point[] pGhost = new Point[MAX_GHOSTS];
+    final Direction[] dGhost = new Direction[MAX_GHOSTS];
+    final int[] ghostSpeed = new int[MAX_GHOSTS];
     private static final Logger log = LoggerFactory.getLogger(Board.class);
-    public static int numGhosts = 6; 
-    public static final int[] VALID_SPEEDS = {1, 2, 3, 4, 6, 8};
+    int numGhosts = 6; 
+    
+    int ghostSpeedRank = 3;
 
-    public static void continueLevelGhost(){
+    void continueLevelGhost(){
         for (int i = 0; i < numGhosts; i++) {
             pGhost[i] = new Point(4 * Board.BLOCK_SIZE, 4 * Board.BLOCK_SIZE);
             dGhost[i] = i % 2 == 0 ? Direction.R : Direction.L;
-            ghostSpeed[i] = VALID_SPEEDS[Board.random.nextInt(Board.ghostSpeedRank)];
+            ghostSpeed[i] = VALID_SPEEDS[Board.random.nextInt(ghostSpeedRank)];
             log.debug("Ghost {}: speed {}", i, ghostSpeed[i]);
         }
     }
-    public static void moveGhosts() {
+    void moveGhosts() {
         for (int i = 0; i < numGhosts; i++) {
             if (onBlock(pGhost[i])) {
                 int loc = pointToLocation(pGhost[i]);
@@ -64,11 +66,11 @@ public class Ghost {
             pGhost[i].y += dGhost[i].dy * ghostSpeed[i];
         }
     }
-    public static boolean onBlock(Point p) {
+    private boolean onBlock(Point p) {
         return p.x % Board.BLOCK_SIZE == 0 && p.y % Board.BLOCK_SIZE == 0;
     }
 
-    public static int pointToLocation(Point p) {
+    private int pointToLocation(Point p) {
         return (p.y / Board.BLOCK_SIZE) * Board.MAP_SIZE.width + (p.x / Board.BLOCK_SIZE);
     }
 

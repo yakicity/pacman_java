@@ -25,32 +25,32 @@ public class Player {
     /**
      * Pacman's position.
      */
-    public static Point pPacman;
+    Point pPacman;
     /**
      * Pacman's (logical and view's) directions.
      */
-    public static Direction dPacman,dPacmanView;
+    Direction dPacman,dPacmanView;
     /**
      * Pacman's left.
      */
-    public static int pacmansLeft;
+    int pacmansLeft;
 
-    public static void continueLevelPacman(){
+    void continueLevelPacman(){
         pPacman = new Point(7 * Board.BLOCK_SIZE, 11 * Board.BLOCK_SIZE);
         dPacman = Board.dRequest = Direction.O;
         dPacmanView = Direction.L;
     }
 
-    public static boolean onBlock(Point p) {
+    private boolean onBlock(Point p) {
         return p.x % Board.BLOCK_SIZE == 0 && p.y % Board.BLOCK_SIZE == 0;
     }
-    public static int pointToLocation(Point p) {
+    private int pointToLocation(Point p) {
         return (p.y / Board.BLOCK_SIZE) * Board.MAP_SIZE.width + (p.x / Board.BLOCK_SIZE);
     }
     /**
      * Moves Pacman.　->packman
      */
-    public static void movePacman() {
+    void movePacman() {
         // Pacman can always go in the exact opposite direction
         if (Board.dRequest.flip() == dPacman) {
             dPacmanView = dPacman = Board.dRequest;
