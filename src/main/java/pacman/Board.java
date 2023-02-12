@@ -59,6 +59,7 @@ public class Board extends JPanel {
     
     public final Player player;
     public final Ghost ghost;
+    public final Arrangement arrangement;
     private final Recorder recorder = new Recorder();
     private final Timer timer = new Timer(40, recorder.getTimerRecorder(new TimerActionListener()));
 
@@ -72,6 +73,7 @@ public class Board extends JPanel {
         setBackground(Color.black);
         this.player= new Player();
         this.ghost= new Ghost();
+        this.arrangement = new Arrangement();
     }
 
     // ------------------------------------------
@@ -102,7 +104,7 @@ public class Board extends JPanel {
         score = 0;
         ghost.numGhosts = 0;
         ghost.ghostSpeedRank = 3;
-        initMap(Arrangement.ARRANGEMENTS[Arrangement.numOfArr]);
+        initMap(arrangement.arrangement);
         continueGame();
     }
     private void initMap(int[] arrangement) {//レベルからMAPをつくる
@@ -196,15 +198,15 @@ public class Board extends JPanel {
      * Goes to the next level.
      */
     private void increaseLevel() {
+        level +=1;
         if (ghost.numGhosts < Ghost.MAX_GHOSTS) {
             ghost.numGhosts++;
         }
         if (ghost.ghostSpeedRank < Ghost.VALID_SPEEDS.length) {
             ghost.ghostSpeedRank++;
         }       
-        Arrangement.changeArrangement();
-        initMap(Arrangement.ARRANGEMENTS[Arrangement.numOfArr]);
-        level +=1;
+        arrangement.changeArrangement();
+        initMap(arrangement.arrangement);
         continueGame();
     }
 
