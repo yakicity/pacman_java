@@ -29,7 +29,7 @@ public class Player {
     /**
      * Pacman's (logical and view's) directions.
      */
-    public static Direction dPacman;
+    public static Direction dPacman,dPacmanView;
     /**
      * Pacman's left.
      */
@@ -38,7 +38,7 @@ public class Player {
     public static void continueLevelPacman(){
         pPacman = new Point(7 * Board.BLOCK_SIZE, 11 * Board.BLOCK_SIZE);
         dPacman = Board.dRequest = Direction.O;
-        Board.dPacmanView = Direction.L;
+        dPacmanView = Direction.L;
     }
 
     public static boolean onBlock(Point p) {
@@ -53,7 +53,7 @@ public class Player {
     public static void movePacman() {
         // Pacman can always go in the exact opposite direction
         if (Board.dRequest.flip() == dPacman) {
-            Board.dPacmanView = dPacman = Board.dRequest;
+            dPacmanView = dPacman = Board.dRequest;
         }
         if (onBlock(pPacman)) {
             int loc = pointToLocation(pPacman);
@@ -69,7 +69,7 @@ public class Player {
                         || (Board.dRequest == Direction.U && (l & 2) != 0)
                         || (Board.dRequest == Direction.R && (l & 4) != 0)
                         || (Board.dRequest == Direction.D && (l & 8) != 0))) {
-                            Board.dPacmanView = dPacman = Board.dRequest;
+                            dPacmanView = dPacman = Board.dRequest;
                 }
             }
             // Check for standstill

@@ -120,7 +120,7 @@ public class Board extends JPanel {
     //  * Pacman's (logical and view's) directions.
     //  */
     // private Direction dPacman, dPacmanView;
-    public static Direction dPacmanView;
+    // public static Direction dPacmanView;
 
     // /**
     //  * Direction from the keyboard event.
@@ -487,7 +487,7 @@ public class Board extends JPanel {
     private void drawPacman(Graphics2D g) {
         int state = ANIMATION_STATES[animationIndex];
         Image img;
-        switch (dPacmanView) {
+        switch (Player.dPacmanView) {
         case L:
             img = PACMAN_IMAGE_L[state];
             break;
