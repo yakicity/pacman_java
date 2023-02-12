@@ -324,15 +324,6 @@ public class Board extends JPanel {
                 }
                 return;
             }
-            // if (key == KeyEvent.VK_ESCAPE && timer.isRunning()) {
-            //     finishGame();
-            // } else if (key == KeyEvent.VK_PAUSE) {
-            //     if (timer.isRunning()) {
-            //         timer.stop();
-            //     } else {
-            //         timer.start();
-            //     }
-            // }
             if (key == KeyEvent.VK_LEFT) {
                 dRequest = Direction.L;
             } else if (key == KeyEvent.VK_RIGHT) {
