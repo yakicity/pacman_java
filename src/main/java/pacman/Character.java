@@ -13,7 +13,7 @@ abstract class Character extends JPanel{
         return (p.y / Board.BLOCK_SIZE) * Board.MAP_SIZE.width + (p.x / Board.BLOCK_SIZE);
     } 
     static Image load(String filename) {
-        URL url = Board.class.getClassLoader().getResource("images/" + filename);
+        URL url = GameManager.class.getClassLoader().getResource("images/" + filename);
         assert url != null;
         return new ImageIcon(url).getImage();
     }

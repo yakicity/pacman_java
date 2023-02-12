@@ -37,8 +37,8 @@ public class Player extends Character{
     @Override
     void move() {
         // Pacman can always go in the exact opposite direction
-        if (Board.dRequest.flip() == dPacman) {
-            dPacmanView = dPacman = Board.dRequest;
+        if (GameManager.dRequest.flip() == dPacman) {
+            dPacmanView = dPacman = GameManager.dRequest;
         }
         if (onBlock(pPacman)) {
             int loc = pointToLocation(pPacman);
@@ -46,21 +46,21 @@ public class Player extends Character{
             if ((l & 32) != 0) {//右から6番目のビットが少なくとも1が立ってたら、つまりまだ食料を食べていなかったら
                 // eat super dot
                 Board.map[loc] = l & 31;//6桁目だけを0に変える
-                Board.score += 10;
+                GameManager.score += 10;
 
             }
             if ((l & 16) != 0) {//右から5番目のビットが少なくとも1が立ってたら、つまりまだ食料を食べていなかったら
                 // eat dot
                 Board.map[loc] = l & 15;//5桁目だけを0に変える
-                Board.score++;
+                GameManager.score++;
             }
             // turn
-            if (Board.dRequest != Direction.O) {
-                if (!((Board.dRequest == Direction.L && (l & 1) != 0)//（左に行きたい、かついけない）ではない、つまりどこかに行ける時
-                        || (Board.dRequest == Direction.U && (l & 2) != 0)
-                        || (Board.dRequest == Direction.R && (l & 4) != 0)
-                        || (Board.dRequest == Direction.D && (l & 8) != 0))) {
-                            dPacmanView = dPacman = Board.dRequest;
+            if (GameManager.dRequest != Direction.O) {
+                if (!((GameManager.dRequest == Direction.L && (l & 1) != 0)//（左に行きたい、かついけない）ではない、つまりどこかに行ける時
+                        || (GameManager.dRequest == Direction.U && (l & 2) != 0)
+                        || (GameManager.dRequest == Direction.R && (l & 4) != 0)
+                        || (GameManager.dRequest == Direction.D && (l & 8) != 0))) {
+                            dPacmanView = dPacman = GameManager.dRequest;
                 }
             }
             // Check for standstill
@@ -78,7 +78,7 @@ public class Player extends Character{
     @Override
     void continueGame(){
         pPacman = new Point(7 * Board.BLOCK_SIZE, 11 * Board.BLOCK_SIZE);
-        dPacman = Board.dRequest = Direction.O;
+        dPacman = GameManager.dRequest = Direction.O;
         dPacmanView = Direction.L;
     }
 

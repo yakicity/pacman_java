@@ -11,7 +11,7 @@ public class Ghost extends Character{
     final Point[] pGhost = new Point[MAX_GHOSTS];
     final Direction[] dGhost = new Direction[MAX_GHOSTS];
     final int[] ghostSpeed = new int[MAX_GHOSTS];
-    private static final Logger log = LoggerFactory.getLogger(Board.class);
+    private static final Logger log = LoggerFactory.getLogger(GameManager.class);
     int numGhosts = 6; 
     int ghostSpeedRank = 3;
 
@@ -20,7 +20,7 @@ public class Ghost extends Character{
         for (int i = 0; i < numGhosts; i++) {
             pGhost[i] = new Point(4 * Board.BLOCK_SIZE, 4 * Board.BLOCK_SIZE);
             dGhost[i] = i % 2 == 0 ? Direction.R : Direction.L;
-            ghostSpeed[i] = VALID_SPEEDS[Board.random.nextInt(ghostSpeedRank)];
+            ghostSpeed[i] = VALID_SPEEDS[GameManager.random.nextInt(ghostSpeedRank)];
             log.debug("Ghost {}: speed {}", i, ghostSpeed[i]);
         }
     }
@@ -49,7 +49,7 @@ public class Ghost extends Character{
                         dGhost[i] = dGhost[i].flip();
                     }
                 } else {
-                    int n = Board.random.nextInt(dirs.size());
+                    int n = GameManager.random.nextInt(dirs.size());
                     dGhost[i] = dirs.get(n);
                 }
             }
