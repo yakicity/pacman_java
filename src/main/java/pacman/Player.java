@@ -25,12 +25,15 @@ public class Player {
     /**
      * Pacman's position.
      */
-    // public static Point pPacman;
     public static Point pPacman;
     /**
      * Pacman's (logical and view's) directions.
      */
     public static Direction dPacman;
+    /**
+     * Pacman's left.
+     */
+    public static int pacmansLeft;
 
     public static void continueLevelPacman(){
         pPacman = new Point(7 * Board.BLOCK_SIZE, 11 * Board.BLOCK_SIZE);
@@ -79,30 +82,6 @@ public class Player {
         }
         pPacman.x += dPacman.dx * PACMAN_SPEED;
         pPacman.y += dPacman.dy * PACMAN_SPEED;
-        System.out.println(pPacman.x);
-    }
-
-    // なんかこれできない
-
-    
-    // class TAdapter extends KeyAdapter {
-    //     @Override
-    //     public void keyPressed(KeyEvent e) {
-    //         int key = e.getKeyCode();
-            
-    //         if (key == KeyEvent.VK_LEFT) {
-    //             dRequest = Direction.L;
-    //         } else if (key == KeyEvent.VK_RIGHT) {
-    //             dRequest = Direction.R;
-    //         } else if (key == KeyEvent.VK_UP) {
-    //             dRequest = Direction.U;
-    //         } else if (key == KeyEvent.VK_DOWN) {
-    //             dRequest = Direction.D;
-    //         }
-    //     }
-    // }
-    
-
-
-    
+        // System.out.println(pPacman.x);
+    }  
 }

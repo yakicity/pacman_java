@@ -1,7 +1,7 @@
 package pacman;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+// import org.slf4j.Logger;
+// import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,8 +9,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+// import java.util.ArrayList;
+// import java.util.List;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
@@ -42,7 +42,8 @@ public class Board extends JPanel {
      */
     public static final Dimension SCREEN_SIZE = new Dimension(BOARD_SIZE.width, BOARD_SIZE.height + 55);
 
-    public static final int MAX_GHOSTS = 12;
+    // private static final int MAX_GHOSTS = 12;
+
     // /**
     //  * Pacman's speed.
     // */
@@ -51,7 +52,7 @@ public class Board extends JPanel {
     //  * Ghost's speed.
     // */    
     // private static final int[] VALID_SPEEDS = {1, 2, 3, 4, 6, 8};
-    public static final int[] VALID_SPEEDS = {1, 2, 3, 4, 6, 8};
+    
 
     // pacman
     private static final int[] ANIMATION_STATES = {0, 0, 1, 1, 2, 2, 3, 3, 2, 2, 1, 1};
@@ -103,7 +104,7 @@ public class Board extends JPanel {
     /**
      * Pacman's left.
      */
-    private int pacmansLeft;
+    // private int pacmansLeft;
     /**
      * score.
      */    
@@ -131,7 +132,7 @@ public class Board extends JPanel {
      * Number of ghosts.
      */
     // private int numGhosts = 6;
-    public static int numGhosts = 6;
+    // public static int numGhosts = 6;
 
     /**
      * Position of ghosts.
@@ -198,9 +199,9 @@ public class Board extends JPanel {
     }
 
     private void initGame() {
-        pacmansLeft = 3;
+        Player.pacmansLeft = 3;
         score = 0;
-        numGhosts = 6;
+        Ghost.numGhosts = 6;
         ghostSpeedRank = 3;
         initLevel(LEVEL);
     }
@@ -236,7 +237,6 @@ public class Board extends JPanel {
         // dPacman = dRequest = Direction.O;
         // dPacmanView = Direction.L;
         Player.continueLevelPacman();
-        Ghost.continueLevelGhost();
         dying = false;
         Ghost.continueLevelGhost();
         // for (int i = 0; i < numGhosts; i++) {
@@ -307,18 +307,18 @@ public class Board extends JPanel {
      */
     private void increaseLevel() {
         score += 50;
-        if (numGhosts < MAX_GHOSTS) {
-            numGhosts++;
+        if (Ghost.numGhosts < Ghost.MAX_GHOSTS) {
+            Ghost.numGhosts++;
         }
-        if (ghostSpeedRank < VALID_SPEEDS.length) {
+        if (ghostSpeedRank < Ghost.VALID_SPEEDS.length) {
             ghostSpeedRank++;
         }
         initLevel(LEVEL);
     }
 
     private void death() {
-        pacmansLeft--;
-        if (pacmansLeft == 0) {
+        Player.pacmansLeft--;
+        if (Player.pacmansLeft == 0) {
             finishGame();
         }
         continueLevel();
@@ -401,7 +401,7 @@ public class Board extends JPanel {
      * Judges whether Pacman touched any ghost.
      */
     private boolean checkCollision() {
-        for (int i = 0; i < numGhosts; i++) {
+        for (int i = 0; i < Ghost.numGhosts; i++) {
             if (isCollision(Player.pPacman, Ghost.pGhost[i]) && inGame) {
                 return true;
             }
@@ -460,7 +460,7 @@ public class Board extends JPanel {
         g.setFont(SMALL_FONT);
         g.setColor(SCORE_COLOR);
         g.drawString("Score: " + score, BOARD_SIZE.width / 2 + 96, BOARD_SIZE.height + 16);
-        for (int i = 0; i < pacmansLeft; i++) {
+        for (int i = 0; i < Player.pacmansLeft; i++) {
             g.drawImage(PACMAN_IMAGE_L[3], i * 28 + 8, BOARD_SIZE.height + 1, this);
         }
     }
@@ -508,7 +508,7 @@ public class Board extends JPanel {
      * Draws ghosts.
      */
     private void drawGhosts(Graphics2D g) {
-        for (int i = 0; i < numGhosts; i++) {
+        for (int i = 0; i < Ghost.numGhosts; i++) {
             g.drawImage(GHOST_IMAGE, Ghost.pGhost[i].x + 1, Ghost.pGhost[i].y + 1, this);
         }
     }

@@ -16,20 +16,24 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 public class Ghost {
-    public static final Point[] pGhost = new Point[Board.MAX_GHOSTS];
-    public static final Direction[] dGhost = new Direction[Board.MAX_GHOSTS];
-    public static final int[] ghostSpeed = new int[Board.MAX_GHOSTS];
+    public static final int MAX_GHOSTS = 12;
+    public static final Point[] pGhost = new Point[MAX_GHOSTS];
+    public static final Direction[] dGhost = new Direction[MAX_GHOSTS];
+    public static final int[] ghostSpeed = new int[MAX_GHOSTS];
     private static final Logger log = LoggerFactory.getLogger(Board.class);
+    public static int numGhosts = 6; 
+    public static final int[] VALID_SPEEDS = {1, 2, 3, 4, 6, 8};
+
     public static void continueLevelGhost(){
-        for (int i = 0; i < Board.numGhosts; i++) {
+        for (int i = 0; i < numGhosts; i++) {
             pGhost[i] = new Point(4 * Board.BLOCK_SIZE, 4 * Board.BLOCK_SIZE);
             dGhost[i] = i % 2 == 0 ? Direction.R : Direction.L;
-            ghostSpeed[i] = Board.VALID_SPEEDS[Board.random.nextInt(Board.ghostSpeedRank)];
+            ghostSpeed[i] = VALID_SPEEDS[Board.random.nextInt(Board.ghostSpeedRank)];
             log.debug("Ghost {}: speed {}", i, ghostSpeed[i]);
         }
     }
     public static void moveGhosts() {
-        for (int i = 0; i < Board.numGhosts; i++) {
+        for (int i = 0; i < numGhosts; i++) {
             if (onBlock(pGhost[i])) {
                 int loc = pointToLocation(pGhost[i]);
                 List<Direction> dirs = new ArrayList<>();
