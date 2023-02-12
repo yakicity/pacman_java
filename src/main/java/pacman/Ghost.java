@@ -15,7 +15,7 @@ import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-public class Ghost {
+public class Ghost extends JPanel{
     static final int MAX_GHOSTS = 12;
     static final int[] VALID_SPEEDS = {1, 2, 3, 4, 6, 8};
     final Point[] pGhost = new Point[MAX_GHOSTS];
@@ -73,6 +73,19 @@ public class Ghost {
     private int pointToLocation(Point p) {
         return (p.y / Board.BLOCK_SIZE) * Board.MAP_SIZE.width + (p.x / Board.BLOCK_SIZE);
     }
-
+    private static Image load(String filename) {
+        URL url = Board.class.getClassLoader().getResource("images/" + filename);
+        assert url != null;
+        return new ImageIcon(url).getImage();
+    }
+    private static final Image GHOST_IMAGE = load("ghost.png");
+    /**
+     * Draws ghosts.
+     */
+    void drawGhosts(Graphics2D g) {
+        for (int i = 0; i < numGhosts; i++) {
+            g.drawImage(GHOST_IMAGE, pGhost[i].x + 1, this.pGhost[i].y + 1, this);
+        }
+    }
 }
     

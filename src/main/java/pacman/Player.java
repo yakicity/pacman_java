@@ -17,7 +17,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-public class Player {
+public class Player extends JPanel{
     /**
      * Pacman's speed.
     */
@@ -84,4 +84,53 @@ public class Player {
         pPacman.y += dPacman.dy * PACMAN_SPEED;
         // System.out.println(pPacman.x);
     }  
+    // pacman
+    private static final int[] ANIMATION_STATES = {0, 0, 1, 1, 2, 2, 3, 3, 2, 2, 1, 1};
+
+    /**
+     * Pacman's image.
+    */
+    private static final Image PACMAN_IMAGE_NEUTRAL = load("pacman.png");
+    static final Image[] PACMAN_IMAGE_L = {PACMAN_IMAGE_NEUTRAL, load("left1.png"), load("left2.png"), load("left3.png")};
+    private static final Image[] PACMAN_IMAGE_U = {PACMAN_IMAGE_NEUTRAL, load("up1.png"), load("up2.png"), load("up3.png")};
+    private static final Image[] PACMAN_IMAGE_R = {PACMAN_IMAGE_NEUTRAL, load("right1.png"), load("right2.png"), load("right3.png")};
+    private static final Image[] PACMAN_IMAGE_D = {PACMAN_IMAGE_NEUTRAL, load("down1.png"), load("down2.png"),  load("down3.png")};
+    // pacman
+    private int animationIndex = 0;
+
+    private static Image load(String filename) {
+        URL url = Board.class.getClassLoader().getResource("images/" + filename);
+        assert url != null;
+        return new ImageIcon(url).getImage();
+    }
+    /**
+     * Updates Pacman's animation state.->packman
+     */
+    void updateAnimationState() {
+        animationIndex = (animationIndex + 1) % ANIMATION_STATES.length;
+    }
+
+    /**
+     * Draws Pacman.-> packman
+     */
+    void drawPacman(Graphics2D g) {
+        int state = ANIMATION_STATES[animationIndex];
+        Image img;
+        switch (dPacmanView) {
+        case L:
+            img = PACMAN_IMAGE_L[state];
+            break;
+        case U:
+            img = PACMAN_IMAGE_U[state];
+            break;
+        case R:
+            img = PACMAN_IMAGE_R[state];
+            break;
+        default:
+            img = PACMAN_IMAGE_D[state];
+            break;
+        }
+        g.drawImage(img, pPacman.x + 1, pPacman.y + 1, this);
+    }
+
 }

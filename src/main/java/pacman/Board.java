@@ -40,26 +40,10 @@ public class Board extends JPanel {
      */
     static final Dimension SCREEN_SIZE = new Dimension(BOARD_SIZE.width, BOARD_SIZE.height + 55);
 
-    // pacman
-    private static final int[] ANIMATION_STATES = {0, 0, 1, 1, 2, 2, 3, 3, 2, 2, 1, 1};
-
     private static final Font SMALL_FONT = new Font("Helvetica", Font.BOLD, 14);
     private static final Color DOT_COLOR = new Color(192, 192, 0);
     private static final Color WALL_COLOR = new Color(5, 100, 5);
     private static final Color SCORE_COLOR = new Color(96, 128, 255);
-
-    /**
-     * ghost.
-     */
-    private static final Image GHOST_IMAGE = load("ghost.png");
-    /**
-     * Pacman's image.
-    */
-    private static final Image PACMAN_IMAGE_NEUTRAL = load("pacman.png");
-    private static final Image[] PACMAN_IMAGE_L = {PACMAN_IMAGE_NEUTRAL, load("left1.png"), load("left2.png"), load("left3.png")};
-    private static final Image[] PACMAN_IMAGE_U = {PACMAN_IMAGE_NEUTRAL, load("up1.png"), load("up2.png"), load("up3.png")};
-    private static final Image[] PACMAN_IMAGE_R = {PACMAN_IMAGE_NEUTRAL, load("right1.png"), load("right2.png"), load("right3.png")};
-    private static final Image[] PACMAN_IMAGE_D = {PACMAN_IMAGE_NEUTRAL, load("down1.png"), load("down2.png"),  load("down3.png")};
 
     private static final int[] LEVEL = {
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -82,17 +66,11 @@ public class Board extends JPanel {
     private boolean inGame = false;
     private boolean dying = false;
     static final int[] map = new int[MAP_SIZE.width * MAP_SIZE.height];
-
-
-    // pacman
-    private int animationIndex = 0;
-
     static int score;
 
-
-    // /**
-    //  * Direction from the keyboard event.
-    //  */
+    /**
+     * Direction from the keyboard event.
+     */
     static Direction dRequest;
 
     
@@ -102,15 +80,6 @@ public class Board extends JPanel {
     private final Timer timer = new Timer(40, recorder.getTimerRecorder(new TimerActionListener()));
 
     public static final Random random = new Random();
-
-    /**
-     * character.
-    */
-    private static Image load(String filename) {
-        URL url = Board.class.getClassLoader().getResource("images/" + filename);
-        assert url != null;
-        return new ImageIcon(url).getImage();
-    }
 
     public Board() {
         System.out.println("Board");
@@ -216,11 +185,11 @@ public class Board extends JPanel {
         g.fillRect(0, 0, SCREEN_SIZE.width, SCREEN_SIZE.height);
         drawMaze(g);
         drawScore(g);
-        updateAnimationState();
+        player.updateAnimationState();
         if (inGame) {
             if (!dying) {
-                drawPacman(g);
-                drawGhosts(g);
+                player.drawPacman(g);
+                ghost.drawGhosts(g);
             }
         } else {
             drawIntroScreen(g);
@@ -276,13 +245,6 @@ public class Board extends JPanel {
         return false;
     }
 
-    /**
-     * Updates Pacman's animation state.->packman
-     */
-    private void updateAnimationState() {
-        animationIndex = (animationIndex + 1) % ANIMATION_STATES.length;
-    }
-
     // ---------------------------------------------
 
     /**
@@ -328,7 +290,7 @@ public class Board extends JPanel {
         g.setColor(SCORE_COLOR);
         g.drawString("Score: " + score, BOARD_SIZE.width / 2 + 96, BOARD_SIZE.height + 16);
         for (int i = 0; i < player.pacmansLeft; i++) {
-            g.drawImage(PACMAN_IMAGE_L[3], i * 28 + 8, BOARD_SIZE.height + 1, this);
+            g.drawImage(Player.PACMAN_IMAGE_L[3], i * 28 + 8, BOARD_SIZE.height + 1, this);
         }
     }
 
@@ -346,38 +308,6 @@ public class Board extends JPanel {
         g.setColor(Color.white);
         g.setFont(SMALL_FONT);
         g.drawString(s, (BOARD_SIZE.width - metric.stringWidth(s)) / 2, BOARD_SIZE.height / 2);
-    }
-
-    /**
-     * Draws Pacman.-> packman
-     */
-    private void drawPacman(Graphics2D g) {
-        int state = ANIMATION_STATES[animationIndex];
-        Image img;
-        switch (player.dPacmanView) {
-        case L:
-            img = PACMAN_IMAGE_L[state];
-            break;
-        case U:
-            img = PACMAN_IMAGE_U[state];
-            break;
-        case R:
-            img = PACMAN_IMAGE_R[state];
-            break;
-        default:
-            img = PACMAN_IMAGE_D[state];
-            break;
-        }
-        g.drawImage(img, player.pPacman.x + 1, player.pPacman.y + 1, this);
-    }
-
-    /**
-     * Draws ghosts.
-     */
-    private void drawGhosts(Graphics2D g) {
-        for (int i = 0; i < ghost.numGhosts; i++) {
-            g.drawImage(GHOST_IMAGE, ghost.pGhost[i].x + 1, ghost.pGhost[i].y + 1, this);
-        }
     }
 
     public void replay(String replayFile) {
