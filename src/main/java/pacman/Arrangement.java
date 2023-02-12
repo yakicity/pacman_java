@@ -67,8 +67,6 @@ public class Arrangement {
         }
 };    
 
-
-
     /**
      * Goes to the next ARRANGEMENT.
      */

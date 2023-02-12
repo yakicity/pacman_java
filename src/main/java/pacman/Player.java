@@ -1,23 +1,7 @@
 package pacman;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
-import javax.swing.ImageIcon;
-import javax.swing.JPanel;
-import javax.swing.Timer;
-
-public class Player extends JPanel{
+public class Player extends Character{
     /**
      * Pacman's speed.
     */
@@ -34,23 +18,24 @@ public class Player extends JPanel{
      * Pacman's left.
      */
     int pacmansLeft;
+    // pacman
+    private static final int[] ANIMATION_STATES = {0, 0, 1, 1, 2, 2, 3, 3, 2, 2, 1, 1};
 
-    void continueGamePacman(){
-        pPacman = new Point(7 * Board.BLOCK_SIZE, 11 * Board.BLOCK_SIZE);
-        dPacman = Board.dRequest = Direction.O;
-        dPacmanView = Direction.L;
-    }
-
-    private boolean onBlock(Point p) {
-        return p.x % Board.BLOCK_SIZE == 0 && p.y % Board.BLOCK_SIZE == 0;
-    }
-    private int pointToLocation(Point p) {
-        return (p.y / Board.BLOCK_SIZE) * Board.MAP_SIZE.width + (p.x / Board.BLOCK_SIZE);
-    }
+    /**
+     * Pacman's image.
+    */
+    private static final Image PACMAN_IMAGE_NEUTRAL = load("pacman.png");
+    static final Image[] PACMAN_IMAGE_L = {PACMAN_IMAGE_NEUTRAL, load("left1.png"), load("left2.png"), load("left3.png")};
+    private static final Image[] PACMAN_IMAGE_U = {PACMAN_IMAGE_NEUTRAL, load("up1.png"), load("up2.png"), load("up3.png")};
+    private static final Image[] PACMAN_IMAGE_R = {PACMAN_IMAGE_NEUTRAL, load("right1.png"), load("right2.png"), load("right3.png")};
+    private static final Image[] PACMAN_IMAGE_D = {PACMAN_IMAGE_NEUTRAL, load("down1.png"), load("down2.png"),  load("down3.png")};
+    // pacman
+    private int animationIndex = 0;
     /**
      * Moves Pacman.　->packman
      */
-    void movePacman() {
+    @Override
+    void move() {
         // Pacman can always go in the exact opposite direction
         if (Board.dRequest.flip() == dPacman) {
             dPacmanView = dPacman = Board.dRequest;
@@ -84,25 +69,13 @@ public class Player extends JPanel{
         pPacman.y += dPacman.dy * PACMAN_SPEED;
         // System.out.println(pPacman.x);
     }  
-    // pacman
-    private static final int[] ANIMATION_STATES = {0, 0, 1, 1, 2, 2, 3, 3, 2, 2, 1, 1};
-
-    /**
-     * Pacman's image.
-    */
-    private static final Image PACMAN_IMAGE_NEUTRAL = load("pacman.png");
-    static final Image[] PACMAN_IMAGE_L = {PACMAN_IMAGE_NEUTRAL, load("left1.png"), load("left2.png"), load("left3.png")};
-    private static final Image[] PACMAN_IMAGE_U = {PACMAN_IMAGE_NEUTRAL, load("up1.png"), load("up2.png"), load("up3.png")};
-    private static final Image[] PACMAN_IMAGE_R = {PACMAN_IMAGE_NEUTRAL, load("right1.png"), load("right2.png"), load("right3.png")};
-    private static final Image[] PACMAN_IMAGE_D = {PACMAN_IMAGE_NEUTRAL, load("down1.png"), load("down2.png"),  load("down3.png")};
-    // pacman
-    private int animationIndex = 0;
-
-    private static Image load(String filename) {
-        URL url = Board.class.getClassLoader().getResource("images/" + filename);
-        assert url != null;
-        return new ImageIcon(url).getImage();
+    @Override
+    void continueGame(){
+        pPacman = new Point(7 * Board.BLOCK_SIZE, 11 * Board.BLOCK_SIZE);
+        dPacman = Board.dRequest = Direction.O;
+        dPacmanView = Direction.L;
     }
+
     /**
      * Updates Pacman's animation state.->packman
      */
@@ -113,7 +86,8 @@ public class Player extends JPanel{
     /**
      * Draws Pacman.-> packman
      */
-    void drawPacman(Graphics2D g) {
+    @Override
+    void draw(Graphics2D g) {
         int state = ANIMATION_STATES[animationIndex];
         Image img;
         switch (dPacmanView) {

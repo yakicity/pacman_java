@@ -1,21 +1,11 @@
 package pacman;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-import javax.swing.ImageIcon;
-import javax.swing.JPanel;
-import javax.swing.Timer;
-public class Ghost extends JPanel{
+public class Ghost extends Character{
     static final int MAX_GHOSTS = 12;
     static final int[] VALID_SPEEDS = {1, 2, 3, 4, 6, 8};
     final Point[] pGhost = new Point[MAX_GHOSTS];
@@ -23,10 +13,10 @@ public class Ghost extends JPanel{
     final int[] ghostSpeed = new int[MAX_GHOSTS];
     private static final Logger log = LoggerFactory.getLogger(Board.class);
     int numGhosts = 6; 
-    
     int ghostSpeedRank = 3;
 
-    void continueGameGhost(){
+    @Override
+    void continueGame(){
         for (int i = 0; i < numGhosts; i++) {
             pGhost[i] = new Point(4 * Board.BLOCK_SIZE, 4 * Board.BLOCK_SIZE);
             dGhost[i] = i % 2 == 0 ? Direction.R : Direction.L;
@@ -34,7 +24,8 @@ public class Ghost extends JPanel{
             log.debug("Ghost {}: speed {}", i, ghostSpeed[i]);
         }
     }
-    void moveGhosts() {
+    @Override
+    void move() {
         for (int i = 0; i < numGhosts; i++) {
             if (onBlock(pGhost[i])) {
                 int loc = pointToLocation(pGhost[i]);
@@ -66,26 +57,24 @@ public class Ghost extends JPanel{
             pGhost[i].y += dGhost[i].dy * ghostSpeed[i];
         }
     }
-    private boolean onBlock(Point p) {
-        return p.x % Board.BLOCK_SIZE == 0 && p.y % Board.BLOCK_SIZE == 0;
-    }
 
-    private int pointToLocation(Point p) {
-        return (p.y / Board.BLOCK_SIZE) * Board.MAP_SIZE.width + (p.x / Board.BLOCK_SIZE);
-    }
-    private static Image load(String filename) {
-        URL url = Board.class.getClassLoader().getResource("images/" + filename);
-        assert url != null;
-        return new ImageIcon(url).getImage();
-    }
     private static final Image GHOST_IMAGE = load("ghost.png");
     /**
      * Draws ghosts.
      */
-    void drawGhosts(Graphics2D g) {
+    @Override
+    void draw(Graphics2D g) {
         for (int i = 0; i < numGhosts; i++) {
             g.drawImage(GHOST_IMAGE, pGhost[i].x + 1, this.pGhost[i].y + 1, this);
         }
+    }
+    void increaseLevel(){
+        if (numGhosts < MAX_GHOSTS) {
+            numGhosts++;
+        }
+        if (ghostSpeedRank < VALID_SPEEDS.length) {
+            ghostSpeedRank++;
+        }    
     }
 }
     

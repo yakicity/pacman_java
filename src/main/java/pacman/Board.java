@@ -1,25 +1,15 @@
 package pacman;
 
-// import org.slf4j.Logger;
-// import org.slf4j.LoggerFactory;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.net.URL;
-// import java.util.ArrayList;
-// import java.util.List;
 import java.util.Random;
-
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class Board extends JPanel {
-    // private static final Logger log = LoggerFactory.getLogger(Board.class);
-
     /**
      * Pixels of one block.
      */
@@ -132,9 +122,9 @@ public class Board extends JPanel {
     }
 
     private void continueGame() {
-        player.continueGamePacman();
+        player.continueGame();
         dying = false;
-        ghost.continueGameGhost();
+        ghost.continueGame();
     }
 
     // ------------------------------------------
@@ -151,8 +141,8 @@ public class Board extends JPanel {
             if (dying) {//一回死ぬ
                 death();
             } else {
-                player.movePacman();
-                ghost.moveGhosts();
+                player.move();
+                ghost.move();
                 if (checkCollision()) {
                     dying = true;
                 }
@@ -172,8 +162,8 @@ public class Board extends JPanel {
         player.updateAnimationState();
         if (inGame) {
             if (!dying) {
-                player.drawPacman(g);
-                ghost.drawGhosts(g);
+                player.draw(g);
+                ghost.draw(g);
             }
         } else {
             drawIntroScreen(g);
@@ -199,12 +189,7 @@ public class Board extends JPanel {
      */
     private void increaseLevel() {
         level +=1;
-        if (ghost.numGhosts < Ghost.MAX_GHOSTS) {
-            ghost.numGhosts++;
-        }
-        if (ghost.ghostSpeedRank < Ghost.VALID_SPEEDS.length) {
-            ghost.ghostSpeedRank++;
-        }       
+        ghost.increaseLevel();
         arrangement.changeArrangement();
         initMap(arrangement.arrangement);
         continueGame();
