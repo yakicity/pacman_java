@@ -5,12 +5,12 @@ import javax.swing.JFrame;
 
 public class Pacman extends JFrame {
 
-    public final Board board;
+    public final GameManager gameManager;
 
     public Pacman() {
         //パックマンというキャラクターではなく、パックマンゲームを始めるクラス
-        this.board = new Board();
-        add(board);
+        this.gameManager = new GameManager();
+        add(gameManager);
         setTitle("Pacman");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(Board.SCREEN_SIZE.width, Board.SCREEN_SIZE.height);
@@ -23,7 +23,7 @@ public class Pacman extends JFrame {
             Pacman pacman = new Pacman();
             pacman.setVisible(true);
             if (replayFile != null) {
-                pacman.board.replay(replayFile);
+                pacman.gameManager.replay(replayFile);
             }
         });
     }
